@@ -61,4 +61,5 @@ async def main() -> None:
 
     await dp.start_polling()
 
+
 asyncio.run(main())
