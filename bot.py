@@ -8,7 +8,6 @@ from aiogram import Bot, Dispatcher, types
 
 
 try:
-    # connect to exist database
     connection = psycopg2.connect(
         host=DB_HOST,
         user=DB_USER,
@@ -20,11 +19,6 @@ try:
 
 except Exception as _ex:
     print("[INFO] Error while working with PostgreSQL", _ex)
-# finally:
-#     if connection:
-#         # cursor.close()
-#         connection.close()
-#         print("[INFO] PostgreSQL connection closed")
 
 def generate_random_string(length=6):
     letters = string.ascii_lowercase
@@ -34,17 +28,29 @@ async def start_command(message: types.Message):
     await message.answer("Hello! I'm a bot. Send me any message and I will reply with a random string.")
 
 async def handle_message(message: types.Message):
+
     tg_id = message.from_user.id
     username = message.from_user.username
     print(username, tg_id)
-    random_string = generate_random_string(6)
+
     with connection.cursor() as cursor:
-        code = generate_random_string()
         cursor.execute(
-            f"""INSERT INTO users (username, tg_id, code) VALUES
-             ('{username}', '{tg_id}', '{code}');"""
-         )
-    await message.answer(random_string)
+            f"SELECT * FROM users WHERE tg_id = '{tg_id}';"
+        )
+        result = cursor.fetchone()
+
+        if result:
+            code = generate_random_string()
+            cursor.execute(
+                f"UPDATE users SET code = '{code}' WHERE tg_id = '{tg_id}';"
+            )
+        else:
+            code = generate_random_string()
+            cursor.execute(
+                f"""INSERT INTO users (username, tg_id, code) VALUES
+                 ('{username}', '{tg_id}', '{code}');"""
+             )
+    await message.answer(code)
 
 async def main() -> None:
     bot = Bot(token=API_TOKEN)
