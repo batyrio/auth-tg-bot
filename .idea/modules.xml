@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/auth-tg-bot.iml" filepath="$PROJECT_DIR$/.idea/auth-tg-bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AuthTgBotAPI.iml" filepath="$PROJECT_DIR$/.idea/AuthTgBotAPI.iml" />
     </modules>
   </component>
 </project>
